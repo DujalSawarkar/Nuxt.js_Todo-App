@@ -30,6 +30,7 @@
 
 <script setup>
 import { ref } from "vue";
+const router = useRouter();
 
 // Define reactive variables using ref
 const formData = ref({
@@ -40,18 +41,27 @@ const formData = ref({
 });
 const handleSubmit = async () => {
   try {
-    const response = await fetch("http://localhost:4000/api/register", {
+    const response = await $fetch("http://localhost:5000/auth/register", {
       method: "POST",
-      body: JSON.stringify(formData.value),
+      body: {
+        name: formData.value.name,
+        email: formData.value.email,
+        password: formData.value.password,
+        role: formData.value.role, // New field added
+      },
     });
+    console.log(formData.value);
+    console.log(response.body);
 
-    if (response.ok) {
-      // Handle successful login
-      console.log("signup successful", response);
-    } else {
-      // Handle login failure
-      console.error("signup failed");
-    }
+    router.push("/login");
+
+    // if (response.ok) {
+    //   // Handle successful login
+    //   console.log("signup successful", response);
+    // } else {
+    //   // Handle login failure
+    //   console.error("signup failed");
+    // }
   } catch (error) {
     console.error("Error during signup:", error);
   }
@@ -72,7 +82,6 @@ const handleSubmit = async () => {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
- 
 }
 
 .form div {
